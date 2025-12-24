@@ -1,6 +1,8 @@
 import React from 'react';
 // Adjust path if needed
-import TimelineItem from './TimelineItem'; 
+import TimelineItem from './TimelineItem';
+import commvaultLogo from '../../../Assets/Commvault.png';
+import cloudRewindLogo from '../../../Assets/CloudRewind.png';
 
 const Career = () => {
   // DATA LIVES HERE
@@ -9,18 +11,22 @@ const Career = () => {
       year: "Nov 2024 - Present",
       role: "Software Dev Engineer",
       company: "Commvault",
+      website: "https://www.commvault.com",
+      logo: commvaultLogo,
       description: [
         "<strong>Full-stack developer</strong> for the Files and Objects team, delivering core features for Third-party Migration, File Archiving, and Windows File Systems.",
         "Feature owner for multiple core components, driving end-to-end development, enhancements, and Level-3 production support.",
         "Resolved 50+ critical customer escalation tickets and led 30+ live customer sessions, directly contributing to improved system stability and customer retention.",
         "Delivered 12+ major feature initiatives and 150+ updates, ensuring high availability and zero-regression quality across releases."
       ],
-      tech: ["CPP","React","SQL","Java","Python"]
+      tech: ["CPP", "React", "SQL", "Java", "Python"]
     },
     {
       year: "Apr 2024 - Oct 2024",
       role: "Software Dev Intern",
       company: "Commvault",
+      website: "https://www.commvault.com",
+      logo: commvaultLogo,
       description: "Assisted in backend API development and automated testing workflows for legacy systems.",
       tech: ["Node.js", "SQL", "Testing"]
     },
@@ -28,23 +34,33 @@ const Career = () => {
       year: "Dec 2023 - Apr 2024",
       role: "Programmer Analyst Trainee",
       company: "Cloud Rewind (Formerly Appranix)",
+      website: "https://www.appranix.com",
+      logo: cloudRewindLogo,
       description: "Built varied web projects and learned the fundamentals of Computer Science and System Design.",
       tech: ["JavaScript", "HTML/CSS", "System Design"]
     }
   ];
 
   return (
-    <section id="career-section" className="min-h-screen py-20 px-4 flex flex-col items-center bg-white">
+    <section id="career-section" className="min-h-screen py-20 px-4 flex flex-col items-center bg-white relative">
+
+      {/* Section Title */}
+      <div className="mb-16 text-center z-10 relative">
+        <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-4">Career Timeline</h2>
+        <div className="w-24 h-1 bg-black mx-auto"></div>
+      </div>
+
       <div className="relative w-full max-w-4xl">
-        {/* Center Line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-black opacity-20"></div>
+        {/* Continuous Center Line (Starts after title now) */}
+        {/* Position: left-6 (1.5rem) aligns with w-12 centered dot (1.5rem) inside this wrapper */}
+        <div className="absolute left-6 md:left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-black opacity-20 top-0"></div>
 
         {/* Render Items */}
         {careerData.map((item, index) => (
-          <TimelineItem 
+          <TimelineItem
             key={index}
-            {...item} 
-            isLeft={index % 2 !== 0} 
+            {...item}
+            isLeft={index % 2 !== 0}
           />
         ))}
       </div>

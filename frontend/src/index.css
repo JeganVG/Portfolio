@@ -7,14 +7,14 @@
 @layer base {
   html {
     /* Firefox */
-    scrollbar-width: none; 
+    scrollbar-width: none;
     /* IE and Edge */
-    -ms-overflow-style: none; 
+    -ms-overflow-style: none;
   }
-  
+
   html::-webkit-scrollbar {
     /* Chrome, Safari, Opera */
-    display: none; 
+    display: none;
   }
 }
 
