@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Career from './pages/Career';
+import ChatWidget from './components/ChatWidget';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         {/* The New Career Page */}
         <Route path="/career" element={<Career />} />
       </Routes>
+      <ChatWidget />
     </BrowserRouter>
   )
 }
