@@ -92,7 +92,7 @@ const Projects = () => {
 
     const projects = [
         {
-            title: "E-Commerce Platform",
+            title: "GAN-Guard",
             description: "A full-featured online store with cart functionality, payment gateway integration, and admin dashboard.",
             detailedDescription: "Designed and built a scalable e-commerce platform from scratch. Key features include a real-time shopping cart managed by Redux, secure payment processing via Stripe, and a comprehensive admin panel for inventory and order management. Optimized for performance with lazy loading and code splitting.",
             tech: ["React", "Node.js", "MongoDB", "Stripe"],
@@ -104,7 +104,7 @@ const Projects = () => {
             ]
         },
         {
-            title: "Task Management App",
+            title: "HostedLLM",
             description: "Collaborative project management tool with real-time updates, drag-and-drop boards, and team chat.",
             detailedDescription: "A Trello-like application enabling teams to organize tasks efficiently. Implemented drag-and-drop using dnd-kit, real-time updates with Firebase Firestore to keep all users in sync, and integrated a live chat feature for seamless communication within project boards.",
             tech: ["Next.js", "Firebase", "Tailwind"],
