@@ -6,7 +6,9 @@ const ChatWidget = () => {
         { text: "Hi! How can I help you today?", isUser: false }
     ]);
     const [inputValue, setInputValue] = useState("");
+    const [backendType, setBackendType] = useState('checking'); // 'checking', 'local', 'gemini'
     const messagesEndRef = useRef(null);
+    const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -16,6 +18,34 @@ const ChatWidget = () => {
         scrollToBottom();
     }, [messages, isOpen]);
 
+    // Check Backend Availability on Mount
+    useEffect(() => {
+        const checkBackend = async () => {
+            try {
+                // Short timeout to avoid long wait
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+                const res = await fetch('http://localhost:20082/', {
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (res.ok) {
+                    console.log("Connected to Local HostedLLM");
+                    setBackendType('local');
+                } else {
+                    throw new Error("Local backend not ready");
+                }
+            } catch (error) {
+                console.log("Local backend unavailable, using Gemini API");
+                setBackendType('gemini');
+            }
+        };
+        checkBackend();
+    }, []);
+
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!inputValue.trim()) return;
@@ -23,45 +53,85 @@ const ChatWidget = () => {
         const userMessage = inputValue;
         const newMessages = [...messages, { text: userMessage, isUser: true }];
 
-        // Add a placeholder for the bot response immediately
         setMessages([...newMessages, { text: "...", isUser: false }]);
         setInputValue("");
 
         try {
-            const response = await fetch('http://localhost:20082/chat_stream', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage }),
-            });
-
-            if (!response.ok) throw new Error('Backend error');
-
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let accumulatedText = "";
-
-            // Loop to read stream
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value, { stream: true });
-                accumulatedText += chunk;
-
-                // Update the last message (the bot placeholder) with new text
-                setMessages(prev => {
-                    const updated = [...prev];
-                    updated[updated.length - 1] = { text: accumulatedText, isUser: false };
-                    return updated;
+            if (backendType === 'local') {
+                // Local HostedLLM Logic
+                const response = await fetch('http://localhost:20082/chat_stream', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage }),
                 });
+
+                if (!response.ok) throw new Error('Backend error');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedText = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    accumulatedText += chunk;
+
+                    setMessages(prev => {
+                        const updated = [...prev];
+                        updated[updated.length - 1] = { text: accumulatedText, isUser: false };
+                        return updated;
+                    });
+                }
+            } else if (backendType === 'gemini') {
+                // Gemini API Logic
+                if (!GEMINI_API_KEY) {
+                    setMessages(prev => {
+                        const updated = [...prev];
+                        updated[updated.length - 1] = { text: "⚠️ API Key missing. Please set VITE_GEMINI_API_KEY in .env", isUser: false };
+                        return updated;
+                    });
+                    return;
+                }
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userMessage }] }]
+                    })
+                });
+
+                if (!response.ok) throw new Error('Gemini API Error');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedText = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+
+                    const matches = chunk.matchAll(/"text":\s*"((?:[^"\\]|\\.)*)"/g);
+                    for (const match of matches) {
+                        const text = JSON.parse(`"${match[1]}"`);
+                        accumulatedText += text;
+                        setMessages(prev => {
+                            const updated = [...prev];
+                            updated[updated.length - 1] = { text: accumulatedText, isUser: false };
+                            return updated;
+                        });
+                    }
+                }
             }
 
         } catch (error) {
-            console.log("Backend offline or error", error);
-            // Fallback
+            console.error("Chat Error", error);
             setMessages(prev => {
                 const updated = [...prev];
-                updated[updated.length - 1] = { text: "I'm under maintenance", isUser: false };
+                updated[updated.length - 1] = { text: "I'm currently unavailable. Please try again later.", isUser: false };
                 return updated;
             });
         }

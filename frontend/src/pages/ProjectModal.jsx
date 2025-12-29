@@ -3,6 +3,7 @@ import { FiX, FiGithub, FiExternalLink } from "react-icons/fi";
 
 const ProjectModal = ({ project, onClose }) => {
     const [isVisible, setIsVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         setIsVisible(true);
@@ -35,10 +36,12 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* Close Button */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full hover:bg-black hover:text-white transition-colors border border-black"
+                    className="absolute top-4 right-4 z-20 p-2 bg-white rounded-full hover:bg-black hover:text-white transition-colors border border-black"
                 >
                     <FiX size={24} />
                 </button>
+
+
 
                 {/* Banner / Header Image Area (Optional: could use a project image here) */}
                 <div className="h-32 md:h-48 bg-gray-100 flex items-center justify-center border-b border-black">
@@ -79,7 +82,29 @@ const ProjectModal = ({ project, onClose }) => {
 
                     {/* Description */}
                     <div className="mb-10">
-                        <h3 className="text-lg font-bold uppercase mb-4 border-b border-gray-200 pb-2">Overview</h3>
+                        <div className="flex justify-between items-end border-b border-gray-200 pb-2 mb-4">
+                            <h3 className="text-lg font-bold uppercase">Overview</h3>
+                            {/* Company Info */}
+                            {project.company && (
+                                <a
+                                    href={project.companyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                                >
+                                    {project.logo && (
+                                        <img
+                                            src={project.logo}
+                                            alt={project.company}
+                                            className="h-5 w-auto object-contain"
+                                        />
+                                    )}
+                                    <span className="text-xs font-bold uppercase text-gray-800 tracking-wider">
+                                        {project.company}
+                                    </span>
+                                </a>
+                            )}
+                        </div>
                         <p className="text-gray-600 leading-relaxed font-serif text-lg">
                             {project.detailedDescription || project.description}
                         </p>
@@ -91,7 +116,11 @@ const ProjectModal = ({ project, onClose }) => {
                             <h3 className="text-lg font-bold uppercase mb-6 border-b border-gray-200 pb-2">Certificates & Screenshots</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {project.certificates.map((cert, idx) => (
-                                    <div key={idx} className="border border-gray-200 p-2 hover:border-black transition-colors">
+                                    <div
+                                        key={idx}
+                                        className="border border-gray-200 p-2 hover:border-black transition-colors cursor-zoom-in"
+                                        onClick={() => setSelectedImage(cert)}
+                                    >
                                         <img
                                             src={cert}
                                             alt={`Certificate ${idx + 1}`}
@@ -105,6 +134,29 @@ const ProjectModal = ({ project, onClose }) => {
 
                 </div>
             </div>
+            {/* Image Zoom Overlay */}
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImage(null);
+                    }}
+                >
+                    <button
+                        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors p-2"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <FiX size={32} />
+                    </button>
+                    <img
+                        src={selectedImage}
+                        alt="Zoomed Certificate"
+                        className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </div>
     );
 };

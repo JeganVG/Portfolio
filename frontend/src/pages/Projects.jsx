@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
 import { FiArrowUpRight, FiGithub } from "react-icons/fi";
 import ProjectModal from './ProjectModal';
+import GANGuardArchitecture from '../../../Assets/Projects/GANGuardArchitecture.jpg';
+import GANGuardSystemDesign from '../../../Assets/Projects/systemdesignGANGuard.jpg';
+import ArchiveComplianceReportingSystem from '../../../Assets/Projects/File Archiving Stubbing Report.png';
+import ArchiveComplianceReportingSystemArchitecture from '../../../Assets/Projects/ArchiveComplianceReportingSystemArchitecture.jpg';
+import VSSErrorMonitoringSystem from '../../../Assets/Projects/Show Clients with VSS errors on the Needs Attention Tile.png';
+import VSSErrorMonitoringSystemArchitecture from '../../../Assets/Projects/RealTimeVSSErrorMonitoringSystem.jpg';
+import TPMMigrationArchitecture from '../../../Assets/Projects/TPMMigrationArchitecture.jpg';
+import VeeamMigration from '../../../Assets/Projects/Veeam FS & VM Migration.png'
+import TSMVMMigration from '../../../Assets/Projects/TSM VM Migration.png'
+import TPMRetentionArchitecture from '../../../Assets/Projects/TPMRetentionArchitecture.jpg'
+import TPMRetention from '../../../Assets/Projects/Support migration of data retention configuration as part of data migration.png'
 
 // Placeholder for certificate images - replace with real imports or URLs
 // import cert1 from '../../../Assets/cert1.png'; 
+
+import commvaultLogo from '../../../Assets/Commvault.png';
+import cloudRewindLogo from '../../../Assets/CloudRewind.png';
+
+// ... existing imports ...
 
 const ProjectCard = ({ project, index, onClick }) => {
     const [isVisible, setIsVisible] = React.useState(false);
@@ -36,37 +52,50 @@ const ProjectCard = ({ project, index, onClick }) => {
             ref={domRef}
             onClick={() => onClick(project)}
             style={{ transitionDelay: `${index * 100}ms` }}
-            className={`group relative p-8 border border-black bg-white hover:bg-black transition-all duration-700 ease-out flex flex-col justify-between h-[400px] cursor-pointer
+            className={`group relative p-6 border border-black bg-white hover:bg-black transition-all duration-700 ease-out flex flex-col justify-between h-[400px] cursor-pointer
                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}
             `}
         >
             {/* Top Content */}
             <div>
-                <div className="flex justify-between items-start mb-6">
-                    <span className="text-4xl font-bold text-gray-200 group-hover:text-gray-800 transition-colors duration-500">
+                <div className="flex justify-between items-start mb-4">
+                    <span className="text-3xl font-bold text-gray-200 group-hover:text-gray-800 transition-colors duration-500">
                         0{index + 1}
                     </span>
-                    <div className="flex gap-4">
-                        <div className="text-2xl text-black group-hover:text-white transition-colors duration-500 hover:opacity-70">
-                            <FiGithub />
+
+                    {/* Company Logo Display */}
+                    {project.logo && (
+                        <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity duration-500 bg-white/10 p-1 rounded-sm backdrop-blur-sm">
+                            <img
+                                src={project.logo}
+                                alt={project.company}
+                                className="h-5 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+                            />
                         </div>
-                    </div>
+                    )}
                 </div>
 
-                <h3 className="text-2xl font-bold mb-4 uppercase tracking-wide group-hover:text-white transition-colors duration-500">
+                <h3 className="text-xl font-bold mb-1 uppercase tracking-wide group-hover:text-white transition-colors duration-500 line-clamp-2 leading-tight">
                     {project.title}
                 </h3>
 
-                <p className="text-gray-600 mb-6 font-serif leading-relaxed group-hover:text-gray-300 transition-colors duration-500 line-clamp-3">
+                {/* Company Name Subtitle */}
+                {project.company && (
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-blue-400 transition-colors duration-500 mb-3">
+                        {project.company}
+                    </p>
+                )}
+
+                <p className="text-sm text-gray-600 mb-4 font-serif leading-relaxed group-hover:text-gray-300 transition-colors duration-500 line-clamp-3">
                     {project.description}
                 </p>
 
                 {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                    {project.tech.map((tech, i) => (
+                <div className="flex flex-wrap gap-1.5 mb-6">
+                    {project.tech.slice(0, 4).map((tech, i) => ( // Show first 4 only
                         <span
                             key={i}
-                            className="text-xs font-bold border border-gray-200 px-2 py-1 text-gray-500 group-hover:border-gray-700 group-hover:text-gray-400 transition-colors duration-500"
+                            className="text-[10px] font-bold border border-gray-200 px-1.5 py-0.5 text-gray-500 group-hover:border-gray-700 group-hover:text-gray-400 transition-colors duration-500"
                         >
                             {tech}
                         </span>
@@ -92,43 +121,74 @@ const Projects = () => {
 
     const projects = [
         {
-            title: "GAN-Guard",
-            description: "A full-featured online store with cart functionality, payment gateway integration, and admin dashboard.",
-            detailedDescription: "Designed and built a scalable e-commerce platform from scratch. Key features include a real-time shopping cart managed by Redux, secure payment processing via Stripe, and a comprehensive admin panel for inventory and order management. Optimized for performance with lazy loading and code splitting.",
-            tech: ["React", "Node.js", "MongoDB", "Stripe"],
-            link: "#",
-            github: "#",
-            certificates: [
-                "https://placehold.co/600x400/EEE/31343C?text=Certificate+1",
-                "https://placehold.co/600x400/EEE/31343C?text=Screenshot+1"
+            "title": "GAN-Guard",
+            "company": "Personal Project",
+            "companyUrl": "https://github.com/JeganVG", // Fallback to personal github
+            "logo": null,
+            "description": "A deepfake detection and segmentation system using Generative Adversarial Networks (GAN) and DeepLab V3.",
+            "detailedDescription": "Designed a custom GAN to synthesize realistic deepfake images, creating a robust training dataset for detection models. Fine-tuned a DeepLab V3 segmentation model (Encoder-Decoder) to identify and localize manipulated facial regions like beards and skin tone with high precision using CUDA acceleration. Built a user-facing React.js and Node.js interface to visualize 'fakeness heatmaps,' making the model's inference explainable to end-users.",
+            "tech": ["Python", "CUDA", "GAN", "DeepLab V3", "React.js", "Node.js"],
+            "github": "https://github.com/JeganVG/GANGuard",
+            "certificates": [
+                GANGuardArchitecture,
+                GANGuardSystemDesign
             ]
         },
         {
-            title: "HostedLLM",
-            description: "Collaborative project management tool with real-time updates, drag-and-drop boards, and team chat.",
-            detailedDescription: "A Trello-like application enabling teams to organize tasks efficiently. Implemented drag-and-drop using dnd-kit, real-time updates with Firebase Firestore to keep all users in sync, and integrated a live chat feature for seamless communication within project boards.",
-            tech: ["Next.js", "Firebase", "Tailwind"],
-            link: "#",
-            github: "#",
-            certificates: []
+            "title": "Archive Compliance Reporting System",
+            "company": "Commvault",
+            "companyUrl": "https://www.commvault.com",
+            "logo": commvaultLogo,
+            "description": "A secure enterprise reporting framework for compliance audits, capable of handling large-scale report downloads (>2GB) with strict security protocols.",
+            "detailedDescription": "Designed a secure reporting framework at Commvault to help customers meet strict compliance audits by tracking qualified archiving items. Developed a secure API using C++ and C# to fetch reports from local proxies to the web server, ensuring data integrity with RBAC and SQL-injection validations. Built a reactive frontend in React.js to manage massive (>2GB) report downloads, featuring automatic compression and real-time progress tracking components.",
+            "tech": ["C++", "C#", "React.js", "SQL", "RBAC"],
+            "link": "https://documentation.commvault.com/saas/stubbing_reports_on_jobs.html",
+            "certificates": [
+                ArchiveComplianceReportingSystem,
+                ArchiveComplianceReportingSystemArchitecture]
         },
         {
-            title: "AI Image Generator",
-            description: "Web application using OpenAI's DALL-E API to generate and share custom images based on text prompts.",
-            detailedDescription: "Leveraged OpenAI's DALL-E API to create an interactive tool where users can generate unique artwork from text descriptions. Features include a community gallery, image downloading, and 'surprise me' prompts. Built with a focus on clean UI/UX.",
-            tech: ["React", "Express", "OpenAI API"],
-            link: "#",
-            github: "#",
-            certificates: []
+            "title": "Real-Time VSS Error Monitoring",
+            "company": "Commvault",
+            "companyUrl": "https://www.commvault.com",
+            "logo": commvaultLogo,
+            "description": "A full-stack monitoring system to detect and alert on critical Volume Shadow Copy Service (VSS) failures during backup operations.",
+            "detailedDescription": "Engineered a full-stack monitoring feature to surface critical VSS errors directly on the 'Needs Attention' dashboard. Extended SQL Stored Procedures and Common APIs to track failures during FileScan and Backup phases, effectively replacing manual log analysis with real-time UI alerts. Implemented automated logic to flag and reset client error states, significantly reducing troubleshooting time for Windows infrastructure.",
+            "tech": ["React.js", "SQL Stored Procedures", "C#", "Windows VSS"],
+            "link": "#",
+            "certificates": [
+                VSSErrorMonitoringSystem,
+                VSSErrorMonitoringSystemArchitecture
+            ]
         },
         {
-            title: "Financial Dashboard",
-            description: "Data visualization dashboard for tracking expenses, income, and investment portfolios with interactive charts.",
-            detailedDescription: "A comprehensive dashboard for personal finance tracking. Utilizes D3.js for complex, interactive data visualizations including line charts for trend analysis and pie charts for expense categorization. specific focus on responsive design for mobile access.",
-            tech: ["Vue.js", "D3.js", "AWS"],
-            link: "#",
-            github: "#",
-            certificates: []
+            "title": "Third-Party Workload Migration (Veeam & IBM TSM)",
+            "company": "Commvault",
+            "companyUrl": "https://www.commvault.com",
+            "logo": commvaultLogo,
+            "description": "An automated framework to migrate legacy backups from Veeam and IBM Spectrum Protect (TSM) to Commvault, utilizing a unique staging and re-hydration architecture.",
+            "detailedDescription": "Engineered an automated migration framework to transition legacy Veeam and IBM Spectrum Protect (TSM) backups into Commvault, effectively eliminating vendor lock-in for enterprise clients. Designed a 'Staging & Ingestion' architecture that utilizes intermediate staging clients to 're-hydrate' third-party data before ingesting it into Commvault storage. Developed comprehensive automation wrappers in Java, Python, and PowerShell to orchestrate `dsmc restore` and Veeam CLI operations, ensuring reliable data extraction without manual intervention.",
+            "tech": ["Java", "Python", "Shell Scripting", "PowerShell", "Veeam", "IBM TSM"],
+            "link": "https://documentation.commvault.com/v11/software/importing_veeam_data.html",
+            "certificates": [
+                VeeamMigration,
+                TSMVMMigration,
+                TPMMigrationArchitecture
+            ]
+        },
+        {
+            "title": "Third-Party Workload & Retention Migration",
+            "company": "Commvault",
+            "companyUrl": "https://www.commvault.com",
+            "logo": commvaultLogo,
+            "description": "A migration framework that transitions retention policies from Third-Party Backup systems to Commvault, featuring a smart batching algorithm for TSM file-level retention.",
+            "detailedDescription": "Engineered an automated framework to migrate legacy backups from Veeam, Avamar, Networker and IBM Spectrum Protect (TSM) to Commvault. Solved the complex challenge of migrating TSM's unique file-level retention by developing a grouping algorithm that bundles files with identical retention periods. These bundles are processed via a synchronized 'Batch Restore (TSM) -> Batch Backup (Commvault)' pipeline, ensuring that every file retains its original compliance and retention tags in the new environment.",
+            "tech": ["Java", "Python", "Shell Scripting", "IBM TSM", "Veeam", "Avamar", "Networker"],
+            "link": "https://documentation.commvault.com/additionalsetting/tpmhonourthirdpartyretention.html",
+            "certificates": [
+                TPMRetention,
+                TPMRetentionArchitecture
+            ]
         }
     ];
 
@@ -142,7 +202,7 @@ const Projects = () => {
             </div>
 
             {/* Projects Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl">
                 {projects.map((project, index) => (
                     <ProjectCard
                         key={index}

@@ -19,7 +19,7 @@ const Career = () => {
         "Resolved 50+ critical customer escalation tickets and led 30+ live customer sessions, directly contributing to improved system stability and customer retention.",
         "Delivered 12+ major feature initiatives and 150+ updates, ensuring high availability and zero-regression quality across releases."
       ],
-      tech: ["CPP", "React", "SQL", "Java", "Python"]
+      tech: ["CPP", "React", "SQL", "Java", "Python", "Windows File System"]
     },
     {
       year: "Apr 2024 - Oct 2024",
@@ -27,8 +27,11 @@ const Career = () => {
       company: "Commvault",
       website: "https://www.commvault.com",
       logo: commvaultLogo,
-      description: "Assisted in backend API development and automated testing workflows for legacy systems.",
-      tech: ["Node.js", "SQL", "Testing"]
+      description: [
+        "Developed automated migration engines for Veeam and TSM workloads, enabling the seamless transition of legacy third-party data to Commvault.",
+        "Engineered system-level utilities (CVFSUtil, DirChange Populator) to optimize Windows incremental backup scans and content distribution."
+      ],
+      tech: ["CPP", "SQL", "Java", "Python", "Windows File System"]
     },
     {
       year: "Dec 2023 - Apr 2024",
@@ -36,8 +39,12 @@ const Career = () => {
       company: "Cloud Rewind (Formerly Appranix)",
       website: "https://www.appranix.com",
       logo: cloudRewindLogo,
-      description: "Built varied web projects and learned the fundamentals of Computer Science and System Design.",
-      tech: ["JavaScript", "HTML/CSS", "System Design"]
+      description: [
+        "Developed scalable Web Adapters for Azure using Java Spring Boot, enabling the automated discovery and protection of enterprise cloud assets.",
+        "Contributed core logic to AnomStack, designing algorithms to detect and flag irregular resource usage patterns, improving cloud cost efficiency and security.",
+        "Built and optimized RESTful Web Services using Spring MVC, gaining hands-on expertise in managing distributed cloud environments (AWS/Azure)."
+      ],
+      tech: ["Java", "Spring Boot", "Azure", "AWS", "REST APIs"]
     }
   ];
 
